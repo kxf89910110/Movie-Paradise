@@ -1,0 +1,68 @@
+extends ../layout
+block content
+	.container
+		.row
+			.col-md-7
+				iframe(src="#{movie.flash}",scrolling="no",border="0",frameborder="no",framespacing="0",allowfullscreen="true",width="720",height="600",align="middle",id="adlistpage")
+			.col-md-5
+				dl.dl-horizontal
+					dt Name
+					dd=movie.title
+					dt Director
+					dd=movie.doctor
+					dt Country
+					dd=movie.country
+					dt Language
+					dd=movie.language
+					dt Premiere Year
+					dd=movie.year
+					dt Introduction
+					dd=movie.summary
+		h3.comment-title Comment
+		ul.comment-list
+			each item in comments
+				li.media
+					.pull-left
+						a.comment_link(href="javascript:;",data-cid="#{item._id}",data-tid="#{item.from._id}")
+							if !user.img
+								img(src="/images/headpic.png",style="width:64px;height:64px;border-radius:50%")
+							else
+								img(src="/uploads/#{user.img}",style="width:64px;height:64px;border-radius:50%")
+					.media-body
+						h5 #{item.from.name}
+							span.pull-right #{moment(item.meta.createAt,'YYYYDDMM').fromNow()}
+						p #{item.content}
+						.comment-reply
+							if item.reply && item.reply.length>0
+								each reply in item.reply
+									.media
+										.pull-left
+											a.comment_link(href="javascript:;",data-cid="#{item._id}",data-tid="#{item.from._id}")
+												if !reply.from.img
+													img(src="/images/headpic.png",style="width:64px;height:64px;border-radius:50%")
+												else
+													img(src="/uploads/#{reply.from.img}",style="width:64px;height:64px;border-radius:50%")
+										.media-body
+											h5(style="color:#337ab7")
+												span #{reply.from.name}
+												span(style="color:#666") Reply
+												span #{reply.to.name}
+											p #{reply.content}
+		.row
+			form(id="form-comment",method="POST",action="/admin/user/comment")
+				.col-md-1
+					img(src="/images/headpic.png", style="width:64px;height:64px;border-radius:50%")
+				.col-md-11
+					textarea.form-control(cols="3",name="comment[content]",style="height:70px;",placeholder="Say Something:")
+				if user
+					.form-group.pull-right(style="margin:15px;")
+						input(type="hidden",name="comment[movie]",value="#{movie._id}")
+						input(type="hidden",name="comment[from]",value="#{user._id}")
+						button#comment-btn.btn.btn-primary(type="submit") Comment
+				else
+					.form-group.pull-right(style="margin:15px;")
+						a(href="/",data-toggle="modal",data-target="#signin-modal") Sign in to comment
+
+	script(src="//cdn.bootcss.com/moment.js/2.18.1/moment.min.js")
+	script(src="//cdn.bootcss.com/moment.js/2.18.1/locale/zh-cn.js")
+	script(src="/js/comment.js")

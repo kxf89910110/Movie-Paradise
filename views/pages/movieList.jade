@@ -1,0 +1,35 @@
+extends ../layout
+block content
+	.container
+		.row
+			.col-md-12
+				table.table.table-hover.table-bordered
+					thead
+						tr
+							th(style="text-align:center;width:60px;") Num
+							th Name
+							th Director
+							th(style="text-align:center;") Country
+							th(style="text-align:center;") Premiere Year
+							th(style="text-align:center;") Add Time
+							th(style="text-align:center;") Class
+							th(style="text-align:center;") Total PV
+							th(style="text-align:center;") View
+							th(style="text-align:center;") Update
+							th(style="text-align:center;") Delete
+					tbody
+						each item,index in movies
+							tr(class="item-id-#{item._id}")
+								td(style="vertical-align: middle;text-align:center;") #{index+1}
+								td(style="vertical-align: middle;") #{item.title}
+								td(style="vertical-align: middle;") #{item.doctor}
+								td(style="vertical-align: middle;text-align:center;") #{item.country}
+								td(style="vertical-align: middle;text-align:center;") #{item.year}
+								td(style="vertical-align: middle;text-align:center;") #{moment(item.meta.createAt).format("MM/DD/YYYY")}
+								td(style="vertical-align: middle;text-align:center;") #{item.category.name}
+								td(style="vertical-align: middle;text-align:center;") #{item.pv}
+								td(style="vertical-align: middle;text-align:center;"): a(target="_blank",href="/movie/#{item._id}") View
+								td(style="vertical-align: middle;text-align:center;"): a(target="_blank",href="/admin/movie/update/#{item._id}") Modify
+								td(style="vertical-align: middle;text-align:center;")
+									button.btn.btn-danger.del(type="button",data-id="#{item._id}",onclick="del(this,'/admin/movie/list')") Delete
+	script(src="/js/admin.js")
